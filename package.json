@@ -1,0 +1,27 @@
+{
+  "name": "pi-browseros-neo",
+  "version": "1.0.0",
+  "description": "BrowserOS Neo integration for Pi Coding Agent: Dedicated live browser automation, MCP tools & native skills",
+  "main": "extensions/browseros-neo.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsc"
+  },
+  "keywords": [
+    "browseros",
+    "browseros-neo",
+    "pi-coding-agent",
+    "mcp",
+    "browser-automation",
+    "skill",
+    "extension"
+  ],
+  "author": "Benjamin Wegener",
+  "license": "MIT",
+  "peerDependencies": {
+    "@earendil-works/pi-coding-agent": ">=0.1.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
