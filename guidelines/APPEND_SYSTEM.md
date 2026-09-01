@@ -7,4 +7,8 @@
   - To read a page's content as text/markdown: call `browseros_read`.
   - To search inside a webpage: call `browseros_grep`.
   - To automate browsing: call `browseros_run` or `browseros_navigate`.
+  - **Handling `(empty page)` & Loading States**:
+    - If a click or navigation initially produces `(empty page)`, the browser is simply still downloading or executing client-side JavaScript.
+    - **Do NOT give up or treat the site as empty.**
+    - Call `browseros_wait` or call `browseros_snapshot` / `browseros_read` after a short delay to retrieve the fully loaded page.
 - **Authoritative sources**: Prefer official documentation, GitHub releases, and primary references when researching solutions.

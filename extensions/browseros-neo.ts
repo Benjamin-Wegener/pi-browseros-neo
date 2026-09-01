@@ -11,12 +11,13 @@ interface McpTool {
 }
 
 const DEFAULT_TOOLS: McpTool[] = [
-  { name: "read", description: "Extract the webpage content directly as clean Markdown", inputSchema: { type: "object", properties: { url: { type: "string", description: "Optional URL" } } } },
-  { name: "grep", description: "Search / filter content inside the active webpage using queries", inputSchema: { type: "object", properties: { query: { type: "string" } }, required: ["query"] } },
-  { name: "navigate", description: "Navigate to any given URL", inputSchema: { type: "object", properties: { url: { type: "string" } }, required: ["url"] } },
-  { name: "tabs", description: "Manage browser tabs (list, switch, open new tabs)", inputSchema: { type: "object", properties: { action: { type: "string" } } } },
-  { name: "snapshot", description: "Inspect DOM element handles for interaction", inputSchema: { type: "object", properties: {} } },
-  { name: "act", description: "Click, type, select, or submit form elements", inputSchema: { type: "object", properties: { action: { type: "string" } } } },
+  { name: "read", description: "Extract the webpage content directly as clean Markdown", inputSchema: { type: "object", properties: { url: { type: "string", description: "Optional URL" }, page: { type: "integer" } } } },
+  { name: "grep", description: "Search / filter content inside the active webpage using queries", inputSchema: { type: "object", properties: { query: { type: "string" }, page: { type: "integer" } }, required: ["query"] } },
+  { name: "navigate", description: "Navigate to any given URL", inputSchema: { type: "object", properties: { url: { type: "string" }, page: { type: "integer" } }, required: ["url"] } },
+  { name: "tabs", description: "Manage browser tabs (list, switch, open new tabs)", inputSchema: { type: "object", properties: { action: { type: "string" }, url: { type: "string" } } } },
+  { name: "snapshot", description: "Inspect DOM element handles for interaction", inputSchema: { type: "object", properties: { page: { type: "integer" } } } },
+  { name: "act", description: "Click, type, select, or submit form elements", inputSchema: { type: "object", properties: { action: { type: "string" }, page: { type: "integer" } } } },
+  { name: "wait", description: "Wait on a signal (for=\"text\", for=\"selector\", or for=\"time\" with value in ms) if page is still loading", inputSchema: { type: "object", properties: { for: { type: "string" }, value: { type: "string" }, page: { type: "integer" }, timeout: { type: "number" } } } },
   { name: "run", description: "Execute automation script against BrowserOS Neo SDK", inputSchema: { type: "object", properties: { script: { type: "string" } }, required: ["script"] } },
 ];
 
@@ -293,9 +294,13 @@ export default async function browserOsExtension(pi: ExtensionAPI) {
                 mimeType: c.mimeType || "image/png",
               };
             }
+            let text = c.text ?? JSON.stringify(c);
+            if (typeof text === "string" && text.includes("(empty page)")) {
+              text += "\n\n[💡 BrowserOS Note: The page is currently loading or rendering client-side JavaScript. Do NOT assume it is empty or abandon it! Call `browseros_wait` (e.g. `{\"for\": \"time\", \"value\": 2000}` or `{\"for\": \"text\"}`) or call `browseros_snapshot` / `browseros_read` to retrieve the fully loaded page.]";
+            }
             return {
               type: "text" as const,
-              text: c.text ?? JSON.stringify(c),
+              text,
             };
           });
 
