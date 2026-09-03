@@ -221,18 +221,55 @@ class BrowserOsMcpClient {
     this.initialized = true;
   }
 
+  restart(): void {
+    this.dispose();
+  }
+
   async listTools(): Promise<McpTool[]> {
     await this.init();
     const res = await this.sendRequest("tools/list", {}, 3000);
     return res?.tools ?? [];
   }
 
+  private isStaleSessionError(errStr: string): boolean {
+    const lower = errStr.toLowerCase();
+    return (
+      lower.includes("no longer live") ||
+      lower.includes("session closed") ||
+      lower.includes("connection closed") ||
+      lower.includes("econnreset") ||
+      lower.includes("broken pipe") ||
+      lower.includes("process exited")
+    );
+  }
+
   async callTool(name: string, args: any): Promise<any> {
-    await this.init();
-    return await this.sendRequest("tools/call", {
-      name,
-      arguments: args,
-    }, 30000);
+    const execute = async () => {
+      await this.init();
+      return await this.sendRequest("tools/call", {
+        name,
+        arguments: args,
+      }, 30000);
+    };
+
+    try {
+      const res = await execute();
+      if (res?.isError) {
+        const errText = res.content?.map((c: any) => c.text).join("\n") || "";
+        if (this.isStaleSessionError(errText)) {
+          // Stale session reported in tool response -> restart & retry once
+          this.restart();
+          return await execute();
+        }
+      }
+      return res;
+    } catch (err: any) {
+      if (this.isStaleSessionError(err?.message || String(err))) {
+        this.restart();
+        return await execute();
+      }
+      throw err;
+    }
   }
 
   dispose(): void {
@@ -242,6 +279,12 @@ class BrowserOsMcpClient {
       } catch {}
       this.child = null;
     }
+    this.initialized = false;
+    for (const [id, req] of this.pendingRequests) {
+      req.reject(new Error("Process disposed"));
+    }
+    this.pendingRequests.clear();
+    this.buffer = "";
   }
 }
 
