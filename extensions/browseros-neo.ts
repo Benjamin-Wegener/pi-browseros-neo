@@ -291,6 +291,8 @@ class BrowserOsMcpClient {
 export default async function browserOsExtension(pi: ExtensionAPI) {
   const client = new BrowserOsMcpClient();
 
+  // Give client-side JS time to render so SPAs don't look like 404/empty pages
+  const JS_SETTLE_MS = 3000;
   // Load MCP tools from BrowserOS Neo, or fallback to default toolset
   let tools: McpTool[] = [];
   try {
@@ -315,6 +317,10 @@ export default async function browserOsExtension(pi: ExtensionAPI) {
       execute: async (toolCallId: string, params: any): Promise<AgentToolResult> => {
         try {
           const res = await client.callTool(tool.name, params);
+          if (tool.name === "navigate" && !res?.isError) {
+            // Give client-side JS time to render so SPAs don't look like 404/empty pages
+            await new Promise((r) => setTimeout(r, JS_SETTLE_MS));
+          }
           if (!res) {
             return {
               content: [{ type: "text", text: "Empty response from BrowserOS Neo" }],
@@ -339,7 +345,10 @@ export default async function browserOsExtension(pi: ExtensionAPI) {
             }
             let text = c.text ?? JSON.stringify(c);
             if (typeof text === "string" && text.includes("(empty page)")) {
-              text += "\n\n[💡 BrowserOS Note: The page is currently loading or rendering client-side JavaScript. Do NOT assume it is empty or abandon it! Call `browseros_wait` (e.g. `{\"for\": \"time\", \"value\": 2000}` or `{\"for\": \"text\"}`) or call `browseros_snapshot` / `browseros_read` to retrieve the fully loaded page.]";
+              text += "\n\n[💡 BrowserOS Note: The page is currently loading or rendering client-side JavaScript. Do NOT assume it is empty or abandon it! Call `browseros_wait` (e.g. `{\"for\": \"time\", \"value\": 5000}` or `{\"for\": \"text\"}`) or call `browseros_snapshot` / `browseros_read` to retrieve the fully loaded page.]";
+            }
+            if (typeof text === "string" && /\b(404|not found|page not found)\b/i.test(text)) {
+              text += "\n\n[💡 BrowserOS Note: A 404/'Not Found' right after loading is often just an unfinished client-side JavaScript render. Call `browseros_wait { \"for\": \"time\", \"value\": 5000 }` and `browseros_read` again (retry up to 3 times) before concluding the page does not exist.]";
             }
             return {
               type: "text" as const,
