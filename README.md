@@ -25,7 +25,7 @@ pi-browseros-neo/
 ├── extensions/
 │   └── browseros-neo.ts       # Extension connecting Pi Coding Agent to BrowserClaw MCP Server
 ├── skills/
-│   └── browseros-neo/
+│   └── browseros-neo-pi/
 │       └── SKILL.md           # Drop-in Agent Skill definition & workflow rules
 ├── guidelines/
 │   ├── AGENTS.md              # Global prompt guidelines for browser search & context
@@ -55,9 +55,10 @@ git clone https://github.com/Benjamin-Wegener/pi-browseros-neo.git /tmp/pi-brows
 mkdir -p ~/.pi/agent/extensions
 cp /tmp/pi-browseros-neo/extensions/browseros-neo.ts ~/.pi/agent/extensions/
 
-# 3. Copy skill
-mkdir -p ~/.pi/agent/skills/browseros-neo
-cp /tmp/pi-browseros-neo/skills/browseros-neo/SKILL.md ~/.pi/agent/skills/browseros-neo/
+# 3. Copy skill (renamed browseros-neo-pi to avoid collision with the
+#    browserclaw-managed skill of the same name in ~/.agents/skills/)
+mkdir -p ~/.pi/agent/skills/browseros-neo-pi
+cp /tmp/pi-browseros-neo/skills/browseros-neo-pi/SKILL.md ~/.pi/agent/skills/browseros-neo-pi/
 
 # 4. (Optional) Append agent verification guidelines
 cat /tmp/pi-browseros-neo/guidelines/AGENTS.md >> ~/.pi/agent/AGENTS.md
