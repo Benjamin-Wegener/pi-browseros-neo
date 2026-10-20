@@ -18,12 +18,24 @@
   ],
   "author": "Benjamin Wegener",
   "license": "MIT",
-  "repository": {"type": "git", "url": "git+https://github.com/Benjamin-Wegener/pi-browseros-neo.git"},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Benjamin-Wegener/pi-browseros-neo.git"
+  },
   "homepage": "https://github.com/Benjamin-Wegener/pi-browseros-neo",
   "peerDependencies": {
     "@earendil-works/pi-coding-agent": ">=0.1.0"
   },
   "devDependencies": {
     "typescript": "^5.0.0"
+  },
+  "files": [
+    "extensions",
+    "skills",
+    "guidelines",
+    "install.sh"
+  ],
+  "bugs": {
+    "url": "https://github.com/Benjamin-Wegener/pi-browseros-neo/issues"
   }
 }
