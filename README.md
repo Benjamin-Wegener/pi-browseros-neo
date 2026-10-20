@@ -78,6 +78,7 @@ The extension exposes the following tools to the agent:
 | `browseros_grep` | Search / filter content inside the active webpage using queries |
 | `browseros_navigate` | Navigate to any given URL |
 | `browseros_tabs` | Manage browser tabs (list, switch, open new tabs) |
+| `browseros_wait` | Wait for text, a selector, or a delay when a page is still loading |
 | `browseros_snapshot` | Inspect DOM element handles (`[ref=eN]`) for interaction |
 | `browseros_act` | Click, type, select, or submit form elements |
 | `browseros_run` | Execute complex multi-step automation chains in a single step |
@@ -88,7 +89,7 @@ The extension exposes the following tools to the agent:
 
 1. **In-Memory Pages**: Browser pages exist in active browser tabs, **never** as local files on disk. Do not use `grep` or `cat` on `/tmp` or disk looking for page snapshots.
 2. **Read vs Snapshot**: Prefer `browseros_read` for reading textual articles and documentation. Use `browseros_snapshot` when interactive form filling or button clicking is needed.
-3. **Session Naming**: Name sessions early with `browseros_name_session` using a short descriptive label.
+3. **Loading States**: An `(empty page)` or a 404 right after navigation is often just a JS app still rendering. Use `browseros_wait`, then read again before concluding the page is missing.
 
 ---
 
