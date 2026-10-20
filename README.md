@@ -50,7 +50,7 @@ pi-browseros-neo/
 curl -fsSL https://raw.githubusercontent.com/Benjamin-Wegener/pi-browseros-neo/main/install.sh | bash
 ```
 
-Add `-s -- --with-guidelines` to also append the verification guidelines to `~/.pi/agent/AGENTS.md`. Restart Pi afterwards.
+Add `-s -- --with-guidelines` to also append the verification guidelines to `~/.pi/agent/AGENTS.md`. Restart Pi afterwards. To remove it again, run the script with `--uninstall`.
 
 <details>
 <summary>Manual install</summary>
