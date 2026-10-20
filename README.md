@@ -2,6 +2,8 @@
 
 Dedicated **BrowserOS Neo** live browser integration for **Pi Coding Agent**.
 
+![Installing pi-browseros-neo](assets/demo.gif)
+
 Replaces static/legacy CLI scraping solutions (like standalone `web-search`) with persistent browser sessions, live authenticated profiles, multi-step actions, and direct Model Context Protocol (MCP) tool registrations.
 
 ---
@@ -31,6 +33,8 @@ pi-browseros-neo/
 │   ├── AGENTS.md              # Global prompt guidelines for browser search & context
 │   └── APPEND_SYSTEM.md       # System prompt additions for web verification
 ├── install.sh                 # One-line installer
+├── assets/
+│   └── demo.gif               # Install demo
 ├── LICENSE
 ├── package.json
 └── README.md
