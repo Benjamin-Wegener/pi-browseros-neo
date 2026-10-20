@@ -30,6 +30,7 @@ pi-browseros-neo/
 ├── guidelines/
 │   ├── AGENTS.md              # Global prompt guidelines for browser search & context
 │   └── APPEND_SYSTEM.md       # System prompt additions for web verification
+├── install.sh                 # One-line installer
 ├── LICENSE
 ├── package.json
 └── README.md
@@ -43,26 +44,27 @@ pi-browseros-neo/
 - [BrowserOS Neo / BrowserClaw](https://browseros.com) installed on macOS
 - [Pi Coding Agent](https://github.com/mariozechner/pi-coding-agent) installed
 
-### 2. Install Extension & Skill
-
-Clone or copy the files into your local `.pi/agent` configuration:
+### 2. Install (one line)
 
 ```bash
-# 1. Clone repository
+curl -fsSL https://raw.githubusercontent.com/Benjamin-Wegener/pi-browseros-neo/main/install.sh | bash
+```
+
+Add `-s -- --with-guidelines` to also append the verification guidelines to `~/.pi/agent/AGENTS.md`. Restart Pi afterwards.
+
+<details>
+<summary>Manual install</summary>
+
+```bash
 git clone https://github.com/Benjamin-Wegener/pi-browseros-neo.git /tmp/pi-browseros-neo
-
-# 2. Copy extension
-mkdir -p ~/.pi/agent/extensions
+mkdir -p ~/.pi/agent/extensions ~/.pi/agent/skills/browseros-neo-pi
 cp /tmp/pi-browseros-neo/extensions/browseros-neo.ts ~/.pi/agent/extensions/
-
-# 3. Copy skill (renamed browseros-neo-pi to avoid collision with the
-#    browserclaw-managed skill of the same name in ~/.agents/skills/)
-mkdir -p ~/.pi/agent/skills/browseros-neo-pi
+# Skill is renamed browseros-neo-pi to avoid collision with the browserclaw-managed one
 cp /tmp/pi-browseros-neo/skills/browseros-neo-pi/SKILL.md ~/.pi/agent/skills/browseros-neo-pi/
-
-# 4. (Optional) Append agent verification guidelines
+# (Optional) guidelines
 cat /tmp/pi-browseros-neo/guidelines/AGENTS.md >> ~/.pi/agent/AGENTS.md
 ```
+</details>
 
 ---
 
