@@ -1,8 +1,16 @@
 #!/usr/bin/env bash
 # One-line installer for pi-browseros-neo.
 #   curl -fsSL https://raw.githubusercontent.com/Benjamin-Wegener/pi-browseros-neo/main/install.sh | bash
+# Add --uninstall to remove it again.
 # Add --with-guidelines to also append the verification guidelines to ~/.pi/agent/AGENTS.md.
 set -euo pipefail
+
+if [ "${1:-}" = "--uninstall" ]; then
+  rm -f "${PI_DIR:-$HOME/.pi/agent}/extensions/browseros-neo.ts"
+  rm -rf "${PI_DIR:-$HOME/.pi/agent}/skills/browseros-neo-pi"
+  echo "Removed pi-browseros-neo. AGENTS.md was left untouched."
+  exit 0
+fi
 
 REPO="https://github.com/Benjamin-Wegener/pi-browseros-neo.git"
 PI_DIR="${PI_DIR:-$HOME/.pi/agent}"
